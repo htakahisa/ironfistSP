@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class OmokoCommand : MonoBehaviour
 {
-    private bool isAttacking = true;
+    [SerializeField]
+    private int isAttacking = 0;
     int hp = 100;
     // Start is called before the first frame update
     void Start()
@@ -48,25 +49,55 @@ public class OmokoCommand : MonoBehaviour
 
 
 
-    private void OnTriggerEnter2D(Collider2D collision) {
-
+    private void OnTriggerStay2D(Collider2D collision) {
         ComputerController com = collision.gameObject.GetComponent<ComputerController>();
-
-        if (com.getIsAttacking()) {
-            hp -= 1;
-            Debug.Log("omoko:" + hp);
+        if (com == null) {
+            return;
         }
+        if (com.getIsAttacking() > 0) {
+            hp -= com.getIsAttacking();
+            Debug.Log("omoko:" + hp);
+            com.AnimEnd();
 
-
+        }
     }
 
 
 
-    public bool getIsAttacking() {
+    public int getIsAttacking() {
         return this.isAttacking;
     }
 
+    public void AnimStart(int power) {
+        isAttacking = power;
+    }
 
+    public void punch(int power) {
+        isAttacking = power;
+        OmokoAttack omoAt = transform.GetChild(0).GetComponent<OmokoAttack>();
+        omoAt.setActive(true);
+    }
+
+
+    public void attackB(int power) {
+        isAttacking = power;
+    }
+
+    public void AnimEnd() {
+        OmokoAttack omoAt = gameObject.GetComponentInChildren<OmokoAttack>();
+        omoAt.setActive(false);
+        isAttacking = 0;
+    }
+
+    public void damage(int damage) {
+
+        this.hp -= damage;
+        Debug.Log("omoko:" + hp);
+    }
+
+    public int getHp() {
+        return this.hp;
+    }
 
 
 

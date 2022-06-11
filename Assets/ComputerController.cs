@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ComputerController : MonoBehaviour {
 
-    private bool isAttacking;
+    private int isAttacking = 0;
 
     private float time;
     int hp = 100;
@@ -27,22 +27,24 @@ public class ComputerController : MonoBehaviour {
         Animator anim = GetComponent<Animator>();
         if (tomato == 1) {
             anim.SetBool("Attack", true);
-        } else { anim.SetBool("Attack", false); }
+        } else {
+            anim.SetBool("Attack", false);
+        }
         if (tomato == 2) {
             //ç¿ïWÇèëÇ´ä∑Ç¶ÇÈ
-            transform.position += new Vector3(-1, 0, 0) * Time.deltaTime;
+            transform.position += new Vector3(-10, 0, 0) * Time.deltaTime;
             anim.SetBool("Walk", true);
         } else {
             anim.SetBool("Walk", false);
         }
         if (tomato == 3) {
             //ç¿ïWÇèëÇ´ä∑Ç¶ÇÈ
-            transform.position += new Vector3(1, 0, 0) * Time.deltaTime;
+            transform.position += new Vector3(10, 0, 0) * Time.deltaTime;
             anim.SetBool("Walk", true);
         } else {
             anim.SetBool("Walk", false);
             if (tomato == 4) {
-                anim.SetBool("âäçñåù", true);
+                anim.SetBool("âäçñåù", true);             
             } else {
                 anim.SetBool("âäçñåù", false);
             }
@@ -51,21 +53,47 @@ public class ComputerController : MonoBehaviour {
         
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) {
+    private void OnTriggerStay2D(Collider2D collision) {
 
         OmokoCommand com = collision.gameObject.GetComponent<OmokoCommand>();
-
-        if (com.getIsAttacking()) {
-            hp -= 1;
-            Debug.Log("com:" + hp);
+        if (com == null) {
+            return;
         }
-
-
+        if (com.getIsAttacking() > 0) {
+            hp -= com.getIsAttacking();
+            Debug.Log("com:" + hp);
+            com.AnimEnd();
+          
+        }
     }
 
 
-    public bool getIsAttacking() {
-        return this.isAttacking;
+    public int getIsAttacking() {
+        return isAttacking;
+    }
+
+    public void punch(int power) {
+        isAttacking = power;
+    }
+
+    public void attackB(int power) {
+        isAttacking = power;
+    }
+
+
+    public void AnimEnd() {
+        isAttacking = 0;
+    }
+
+
+    public void damage(int damage) {
+
+        this.hp -= damage;
+        Debug.Log("com:" + hp);
+    }
+
+    public int getHp() {
+        return this.hp;
     }
 
 }
