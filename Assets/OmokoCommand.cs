@@ -92,6 +92,13 @@ public class OmokoCommand : MonoBehaviour
     public void damage(int damage) {
 
         this.hp -= damage;
+
+        float burst = (100 - this.hp) / 10 / 2;
+
+        Rigidbody2D rb = this.GetComponent<Rigidbody2D> ();  // rigidbody‚ğæ“¾
+        Vector3 force = new Vector3 (-burst,burst,0.0f);    // —Í‚ğİ’è
+        rb.AddForce (force, ForceMode2D.Impulse); 
+
         Debug.Log("omoko:" + hp);
     }
 

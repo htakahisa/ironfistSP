@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ComputerController : MonoBehaviour {
 
+    [SerializeField]
     private int isAttacking = 0;
 
     private float time;
@@ -32,14 +33,22 @@ public class ComputerController : MonoBehaviour {
         }
         if (tomato == 2) {
             //À•W‚ğ‘‚«Š·‚¦‚é
-            transform.position += new Vector3(-10, 0, 0) * Time.deltaTime;
+            // transform.position += new Vector3(-10, 0, 0) * Time.deltaTime;
+
+        Rigidbody2D rb = this.GetComponent<Rigidbody2D> ();  // rigidbody‚ğæ“¾
+        Vector3 force = new Vector3 (-1,0.0f,0.0f);    // —Í‚ğİ’è
+        rb.AddForce (force, ForceMode2D.Impulse); 
+
             anim.SetBool("Walk", true);
         } else {
             anim.SetBool("Walk", false);
         }
         if (tomato == 3) {
             //À•W‚ğ‘‚«Š·‚¦‚é
-            transform.position += new Vector3(10, 0, 0) * Time.deltaTime;
+            // transform.position += new Vector3(10, 0, 0) * Time.deltaTime;
+        Rigidbody2D rb = this.GetComponent<Rigidbody2D> ();  // rigidbody‚ğæ“¾
+        Vector3 force = new Vector3 (-2,0.0f,0.0f);    // —Í‚ğİ’è
+        rb.AddForce (force, ForceMode2D.Impulse);
             anim.SetBool("Walk", true);
         } else {
             anim.SetBool("Walk", false);
@@ -63,6 +72,8 @@ public class ComputerController : MonoBehaviour {
             hp -= com.getIsAttacking();
             Debug.Log("com:" + hp);
             com.AnimEnd();
+
+ 
           
         }
     }
@@ -74,6 +85,8 @@ public class ComputerController : MonoBehaviour {
 
     public void punch(int power) {
         isAttacking = power;
+        ComputerAttack at = transform.GetChild(0).GetComponent<ComputerAttack>();
+        at.setActive(true);
     }
 
     public void attackB(int power) {
@@ -83,12 +96,22 @@ public class ComputerController : MonoBehaviour {
 
     public void AnimEnd() {
         isAttacking = 0;
+        
+        ComputerAttack at = transform.GetChild(0).GetComponent<ComputerAttack>();
+        at.setActive(false);
     }
 
 
     public void damage(int damage) {
 
         this.hp -= damage;
+
+        float burst = (100 - this.hp) / 10 / 2;
+
+        Rigidbody2D rb = this.GetComponent<Rigidbody2D> ();  // rigidbody‚ğæ“¾
+        Vector3 force = new Vector3 (burst,burst,0.0f);    // —Í‚ğİ’è
+        rb.AddForce (force, ForceMode2D.Impulse); 
+
         Debug.Log("com:" + hp);
     }
 
